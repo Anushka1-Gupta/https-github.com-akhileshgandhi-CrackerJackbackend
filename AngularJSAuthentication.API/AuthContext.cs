@@ -38,6 +38,7 @@ namespace AngularJSAuthentication.API
 
         public AuthContext() : base("AuthContext")
         {
+
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
         }
