@@ -1,0 +1,261 @@
+﻿<head>
+    <style>
+        #dragandrophandler {
+            border: 2px dashed #92AAB0;
+            width: 650px;
+            height: 200px;
+            color: #92AAB0;
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px 0px 10px 10px;
+            font-size: 200%;
+            display: table-cell;
+        }
+
+        .progressBar {
+            width: 200px;
+            height: 22px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            display: inline-block;
+            margin: 0px 10px 5px 5px;
+            vertical-align: top;
+        }
+
+            .progressBar div {
+                height: 100%;
+                color: #fff;
+                text-align: right;
+                line-height: 22px; /* same as #progressBar height if we want text middle aligned */
+                width: 0;
+                background-color: #0ba1b5;
+                border-radius: 3px;
+            }
+
+        .statusbar {
+            border-top: 1px solid #A9CCD1;
+            min-height: 25px;
+            width: 700px;
+            padding: 10px 10px 0px 10px;
+            vertical-align: top;
+        }
+
+            .statusbar:nth-child(odd) {
+                background: #EBEFF0;
+            }
+
+        .filename {
+            display: inline-block;
+            vertical-align: top;
+            width: 250px;
+        }
+
+        .filesize {
+            display: inline-block;
+            vertical-align: top;
+            color: #30693D;
+            width: 100px;
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+
+        .abort {
+            background-color: #A8352F;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            display: inline-block;
+            color: #fff;
+            font-family: arial;
+            font-size: 13px;
+            font-weight: normal;
+            padding: 4px 15px;
+            cursor: pointer;
+            vertical-align: top;
+        }
+        img.img80_80 
+        {
+    width: 60px;
+    height: 40px;
+}
+    </style>
+</head>
+<div class="page page-table"  button-permission-binder parentName="Damage Stock" pageName="Create DS Order">
+    <section class="panel panel-default table-dynamic">
+        <div class="panel-heading"> <strong> <span class="glyphicon glyphicon-th"> </span>Create Order For damage stock</strong> </div>
+        <br />
+        <div class="form-group">
+            <label for="site-name">Creat Damage Order</label><br />
+        </div>
+        <div class="col-sm-1">
+            <label for="site-name"></label><br />
+            <button type="button" class="btn btn-primary" ng-click="openmodel()" data-dismiss="modal">
+                Create Order
+            </button>
+        </div>
+        <!--<div class="form-group col-md-2">
+                    <p>Select Warehouse</p>
+                    <select class="form-control" id="site-name" name="Warename" ng-model="warehouses.WarehouseId" data-ng-change="getCustData(warehouses.WarehouseId)">
+                        <option value="">---SELECT---</option>
+                        <option value="{{warehouses.WarehouseId}}" ng-repeat="warehouses in warehouse"> {{warehouses.WarehouseName}} {{warehouses.CityName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <p>Select</p>
+               <select class="form-control" id="site-name" name="Customers Name" ng-model="Customerid" data-ng-change="getitemMaster(c)">
+                        <option value="">---SELECT---</option>
+                        <option value="{{c}}" ng-model="selecteditem.CustName"  ng-repeat="c in customers"> {{c.Name}}</option>
+               </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <p>Select Item</p>
+                   <select class="form-control" id="site-name" name="Item Name"  ng-model="cp.ItemId" data-ng-change="filtitemMaster(cp)">
+                        <option value="">---SELECT---</option>
+                        <option value="{{cp}}"  ng-repeat="cp in DamageItemData"> {{cp.ItemName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="qty">Qty</label>
+        <input class="form-control" type="text" ng-model="selecteditem.DamageInventory" value="{{selecteditem.DamageInventory}}" ng-change="AmountCalculation(selecteditem)"/>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="price">Unit Price</label>
+                    <input class="form-control" type="text" ng-model="selecteditem.UnitPrice" value="{{selecteditem.UnitPrice}}" ng-change="AmountCalculation(selecteditem)" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="price">Total Amount</label>
+                    <input id="tamount" class="form-control" type="text" ng-model="TotalAmount" value="{{TotalAmount}}" disabled />
+                </div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-3">
+                    <label for="site-name" ></label>
+                    <button type="button" id="stdamageorder" class="btn btn-ar btn-primary" ng-click="AddDOrder(selecteditem)"> Create Order </button>
+                </div>
+
+                <table class="table table-bordered table-striped table-responsive">
+                    <thead>
+                    </thead>
+                </table>-->
+
+
+
+
+        <script type="text/ng-template" id="myCreateModal.html">
+
+            <form name="myFormSiteModal">
+
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="cancel()" data-dismiss="modal">
+                        <span class="icon icon-x" aria-hidden="true">
+                        </span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button" ng-click="ok()">×</button>
+                    <h4 class="modal-title">add Item</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <p>Select Warehouse</p>
+                        <select class="form-control" id="site-name" name="Warename" ng-model="warehouses.WarehouseId" ng-disabled="warehouses.WarehouseId"  data-ng-change="getCustData(warehouses.WarehouseId)">
+                            <option value="">---SELECT---</option>
+                            <option value="{{warehouses.WarehouseId}}" ng-repeat="warehouses in warehouse"> {{warehouses.WarehouseName}} {{warehouses.CityName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p>Select Customer</p>
+                        <select class="form-control" id="site-name" name="Customers Name" ng-model="CustomerId"  ng-disabled="CustomerId" data-ng-change="getitemMaster(c)">
+                            <option value="">---SELECT---</option>
+                            <option value="{{c.CustomerId}}"  ng-repeat="c in customers"> {{c.Name}} ({{c.LScode}})</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p>Select Item</p>
+                        <select class="form-control" id="site-name" name="Item Name" ng-model="cp.ItemId" data-ng-change="filtitemMaster(cp)">
+                            <option value="">---SELECT---</option>
+                            <option value="{{cp}}" ng-repeat="cp in DamageItemData"> {{cp.ItemName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="qty">Qty</label>
+                        <input class="form-control" type="text" ng-model="selecteditem.DamageInventory" value="{{selecteditem.DamageInventory}}" ng-change="AmountCalculation(selecteditem)" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="price">Unit Price</label>
+                        <input class="form-control" type="text" ng-model="selecteditem.UnitPrice" value="{{selecteditem.UnitPrice}}" ng-change="AmountCalculation(selecteditem)" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="price">Total Amount</label>
+                        <input id="tamount" class="form-control" type="text" ng-model="TotalAmount" value="{{TotalAmount}}" disabled />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="site-name"></label>
+                        <button type="button" id="stdamageorder" class="btn btn-ar btn-primary" ng-click="AddData(selecteditem,CustomerId)"> Add </button>
+                    </div>
+
+                </div>
+
+                <table class="table table-bordered table-striped table-responsive ">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="th">
+                                    SNo.
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th">
+                                    DamageStockId
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th">
+                                    ItemName
+
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th">
+                                    DamageInventory
+
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th">
+                                    UnitPrice
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th">
+                                    TotalAmount
+
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="trade in DOdata">
+                            <td>{{$index+1}}</td>
+                            <td>{{trade.DamageStockId}}</td>
+                            <td>{{trade.ItemName}}</td>
+                            <td>{{trade.qty}}</td>
+                            <td>{{trade.UnitPrice}}</td>
+                            <td>{{trade.UnitPrice* trade.qty}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ar btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-ar btn-primary skadd" ng-click="Searchsave(CustomerId)">Create Order</button>
+                </div>
+            </form>
+        </script>
+    </section>
+</div>
+
+
+
+
+
+

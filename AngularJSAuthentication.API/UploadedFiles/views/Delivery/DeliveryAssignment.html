@@ -1,0 +1,1613 @@
+﻿<style>
+    /* =============================================================
+      GENERAL STYLES
+    ============================================================ */
+    @media screen {
+        #printSection {
+            display: none;
+        }
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #printSection, #printSection * {
+            visibility: visible;
+        }
+
+        #printSection {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+
+  
+
+    .pad-top-botm {
+        padding-bottom: 40px;
+        padding-top: 22px;
+    }
+
+    h4 {
+        text-transform: uppercase;
+    }
+   
+
+    .contact-info span {
+        font-size: 14px;
+        padding: 0px 50px 0px 50px;
+    }
+
+    .contact-info hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .client-info {
+        font-size: 15px;
+    }
+
+    .ttl-amts {
+        text-align: right;
+        padding-right: 50px;
+    }
+
+    .containers {
+        padding-left: 45px;
+        padding-right: 45px;
+    }
+
+    hr {
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+
+
+</style>
+
+<style>
+    @media print {
+        btn-sm.btn-primary.no-print {
+            display: none !important;
+        }
+
+        glyphicon.glyphicon-print.no-print {
+            display: none !important;
+        }
+    }
+
+    .modal-dialog {
+        width: 90% !important;
+    }
+
+    .hd {
+        display: none;
+    }
+    
+
+    .input-color {
+        position: relative;
+    }
+
+        .input-color input {
+            padding-left: 20px;
+        }
+
+        .input-color .color-box {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
+            background-color: #ccc;
+            position: absolute;
+            left: 5px;
+            top: 5px;
+        }
+</style>
+
+<div class="page page-table"  button-permission-binder parentName="Delivery" pageName="Delivery Assignment">
+    <section class="panel panel-default table-dynamic">
+           <div class="panel-heading">
+            <strong>
+                <span class="glyphicon glyphicon-th"> </span> Delivery Assignment
+            </strong>
+         </div>
+   
+           
+            <div class="form-group col-md-12 clear-both">
+                <div class="form-group col-md-2">
+                    <label for="site-name">Select Warehouse</label><br />
+                    <select class="form-control" id="site-name" ng-model="WarehouseId" data-ng-change="getWarehousebyId(WarehouseId)">
+                        <option value="{{warehouses.WarehouseId}}" ng-repeat="warehouses in warehouse" data-ng-selected="WarehouseId == warehouses.WarehouseId"> {{warehouses.WarehouseName}} {{warehouses.CityName}} </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="site-name">All Delivery boys</label><br>
+                    <select class="form-control" id="site-name" ng-model="Mobile" ng-change="getdborders(Mobile)" ng-click="getoldorders(pageno)">
+                        <option value="">-Select-</option>
+                        <option value="{{db}}" ng-repeat="db in DBoys"> {{db.DisplayName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="site-name">Select Date Range</label><br>
+                    <div class="form-group">
+                        <div class='input-group date'>
+                            <input name="daterange" id="dat" type='text' title="Select Date" class="form-control date-picker" />
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="site-name"></label><br>
+                    <button class="btn-sm btn-primary" ng-disabled="chkdb" ng-click="getoldorders(pageno)"><span class="glyphicon glyphicon-search"></span> Get  Assissments</button>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="site-name"></label><br>
+                    <button class="btn-sm btn-dark skexport" ng-click="Export()"><span class="glyphicon glyphicon-export"></span> Export</button>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="site-name"></label><br>
+                    <a href="#/AssignmentReport" class="btn btn-info btn-sm skassignmentreport" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>AssignmentReport
+                    </a>
+                   
+                    
+                </div>
+                
+            </div>
+        <div class="form-group col-md-12 clear-both">
+            <div class="form-group col-md-2">
+
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="SavedAsDraft" readonly="">
+                        <div class="color-box" style="background-color: navy;"></div>
+                    </div>
+                </div>
+                <!--<div>
+                    <div class="input-color">
+                        <input type="text" value="Finalization" readonly="">
+                        <div class="color-box" style="background-color: #FF850A;"></div>
+                    </div>
+                </div>-->
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Assigned" readonly="">
+                        <div class="color-box" style="background-color: #FF33F0;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Accepted" readonly="">
+                        <div class="color-box" style="background-color: Highlight;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Rejected" readonly="">
+                        <div class="color-box" style="background-color: darkred;"></div>
+                    </div>
+                </div>
+             </div>
+            <div class="form-group col-md-2">
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Pending(Inprogress)" readonly="">
+                        <div class="color-box" style="background-color: #DDE525;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Submitted" readonly="">
+                        <div class="color-box" style="background-color: #3336FF;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Payment" readonly="">
+                        <div class="color-box" style="background-color: #FF002A;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="input-color">
+                        <input type="text" value="Freezed" readonly="">
+                        <div class="color-box" style="background-color: darkgreen;"></div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div>
+                <div class="form-group col-md-9 clear-both">
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="search" class="form-control" ng-model="search">
+                    </div>
+                </div>
+            </div>
+            <table id="allitems" class="table table-bordered table-striped table-responsive" ng-show="oldpords">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="th">S.No.</div>
+                        </th>
+                        <th>
+                            <div class="th">AssignmentId</div>
+                        </th>
+                        <th>
+                            <div class="th">DName</div>
+                        </th>
+
+                        <th>
+                            <div class="th">AssignmentAmount</div>
+                        </th>
+
+                        <th>
+                            <div class="th">
+                                Assignment Date
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">Status</div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Products Types
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Items Details
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                ShortItems & Finalize
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                View(Assignment)
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Summary
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                AssignmentCopy
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                History
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr dir-paginate="pod in currentPageStores |itemsPerPage:itemsPerPage | filter:search " total-items="total_count">
+                        <td>{{1+$index}}</td>
+                        <td><span class="label label-default ng-binding">{{pod.DeliveryIssuanceId}}</span></td>
+                        <td>{{pod.DisplayName}}</td>
+                        <td><span class="label label-danger ng-binding">{{pod.TotalAssignmentAmount}}</span></td>
+                        <td>{{pod.CreatedDate|date:'medium'}}</td>
+                        <td>
+
+                            <span ng-if="pod.Status=='Pending'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Pending(Inprogress)" readonly="">
+                                    <div class="color-box" style="background-color: #DDE525;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Freezed'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Freezed" readonly="">
+                                    <div class="color-box" style="background-color: darkgreen;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='SavedAsDraft'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="SavedAsDraft" readonly="">
+                                    <div class="color-box" style="background-color: navy;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Finalization'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Finalization" readonly="">
+                                    <div class="color-box" style="background-color: #FF850A;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Assigned'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Assigned" readonly="">
+                                    <div class="color-box" style="background-color: #FF33F0;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Submitted'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Submitted" readonly="">
+                                    <div class="color-box" style="background-color: #3336FF;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Payment'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Payment" readonly="">
+                                    <div class="color-box" style="background-color: #FF002A;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Accepted'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Accepted" readonly="">
+                                    <div class="color-box" style="background-color: Highlight;"></div>
+                                </div>
+                            </span>
+                            <span ng-if="pod.Status=='Rejected'">
+                                <div class="input-color">
+                                    <input type="text" style="border: none;pointer-events:none" value="Rejected" readonly="">
+                                    <div class="color-box" style="background-color: darkred;"></div>
+                                </div>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="label label-default ng-binding">{{pod.details.length}} </span>
+                        </td>
+                        <td><button class="btn-sm btn-primary" ng-click="prodetails(pod)"><span class="glyphicon glyphicon-eye-open"></span> Items Details</button></td>
+                        <td><button class="btn-sm btn-warning" ng-click="AddShortItems(pod)"> <span class="glyphicon glyphicon-edit"></span> Short&Finalize</button></td>
+                        <td><button class="btn-sm btn-info" ng-click="summary(pod)"> <span class="glyphicon glyphicon-eye-open"></span>View</button></td>
+                        <td>
+                            <span ng-if="(pod.Status == 'Submitted' || pod.Status == 'Payment'|| pod.Status == 'Freezed' ||pod.Status=='Accepted')">
+                                <a class="btn-sm btn-primary" href="#/DeliveryOrderAssignmentChange/{{pod.DeliveryIssuanceId}}" target="_blank">Summary</a>
+                            </span>
+                        </td>
+
+                        <td>
+                            <span ng-if="pod.UploadedFileName!=null">
+                                <a href="{{hostUrl}}/images/AssigmentImages/{{pod.UploadedFileName}}" target="_blank">
+                                    <img src='{{hostUrl}}/images/AssigmentImages/{{pod.UploadedFileName}}' class="img-square img80_80 no-print" onError="this.onerror = null; this.src = '../../img/logoicon.png';" />
+                                </a>
+                            </span>
+                        </td>
+                        <td><button class="btn-sm btn-primary" data-toggle="modal" data-target="#Assignmodel" ng-click="DeliveryHistroy(pod)">History</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <footer class="table-footer">
+                <div class="row">
+                    <div class="col-md-6 page-num-info">
+                        <span>
+                            Show
+                            <select data-ng-model="selectedPagedItem"
+                                    data-ng-options="num for num in numPerPageOpt"
+                                    data-ng-change="onNumPerPageChange()"></select>//option for no. Items per page //this give no. of items selected to show on page
+                            entries per page
+                        </span>
+                    </div>
+                    <div class="col-md-6 page-num-info">
+                        <dir-pagination-controls max-size="8"
+                                                 direction-links="true"
+                                                 boundary-links="true"
+                                                 on-page-change="getoldorders(newPageNumber)">
+                            //get method call every time when page changes
+                        </dir-pagination-controls>
+                    </div>
+                </div>
+            </footer>
+
+</section>
+</div>
+<!--Assigmnet History-->
+<div class="modal fade " id="Assignmodel" role="dialog">
+    <div class="modal-dialog1">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header w3-red">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title" style="text-align: center;">History</h3>
+            </div>
+            <table class="table table-bordered table-striped table-responsive">
+                <thead>
+
+                    <tr class="w1-red">
+                        <th>
+                            <div class="th">
+                                Id
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Status
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                DeliveryIssuanceId
+                            </div>
+                        </th>
+
+                        <th>
+                            <div class="th">
+                                DeliveryBoy  Name
+                            </div>
+                        </th>
+
+                        <th>
+                            <div class="th">
+                                UpdatedBy
+                            </div>
+                        </th>
+
+                        <th>
+                            <div class="th">
+                                UpdatedDate
+                            </div>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr data-ng-repeat="trade in dataDeliveryHistroy">
+                        <td>{{$index+1}}</td>
+                        <td>{{trade.Status}}</td>
+                        <td>{{trade.DeliveryIssuanceId}}</td>
+                        <td>{{trade.DisplayName}}</td>
+                        <td>{{trade.UpdatedBy}}</td>
+                        <td>{{trade.UpdatedDate | date:'medium'}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <div class="modal-footer w3-red">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- new site modal -->
+<script type="text/ng-template" id="SummaryModal.html">
+    <form name="myFormSiteModal">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()" data-dismiss="modal">
+                <span class="icon icon-x" aria-hidden="true">
+                </span>
+                <span class="sr-only">Close</span>
+            </button>
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button" ng-click="ok()">×</button>
+            <h4 class="modal-title">Delivery Vehicle assissment Summary</h4>
+        </div>
+        <style>
+            .noshowpage {
+                display: none !important
+            }
+        </style>
+
+        <div class="modal-body">
+            <div class="colasdasdasd">
+                <p style="color: #FF0000" ng-show="gotErrors"> Unable To Create Site  ! Please Try Again</p>
+                <p style="color: #FF0000" ng-show="AlreadyExist"> Site Already Exist  ! Please Try Another Site</p>
+            </div>
+            <div class="">
+                <div id="printSectionId">  
+                    <style type="text/css">
+                        @media print {
+                            table {
+                                border: solid #000 !important;
+                                border-width: 1px 0 0 1px !important;
+                            }
+
+
+                            th, td {
+                                border: solid #000 !important;
+                                border-width: 0 1px 1px 0 !important;
+                            }
+
+                            /*table, th, td {
+                                        border: 1px solid #000 !important;
+                                        border-width: 0 1px 0px 0 !important;
+
+                                    }*/
+
+                            .no-print {
+                                display: none !important;
+                            }
+
+                            .border {
+                                border: 1px solid #000 !important;
+                            }
+                        }
+                    </style>
+
+                    <table class="table table-bordered table-striped table-responsive">
+                        <!--<style>
+                            table, th, td {
+                                border: 1px solid black;
+                            }
+                        </style>-->
+                        <p class="noshowpage text-center" style="text-align:center;color: black;font-weight:bold"><strong>Delivery Vehicle Assissment Summary</strong></p>
+                        <hr></hr>
+                        <thead>
+                            <p style="text-align:left;color: black;font-weight:bold">
+                                Assignment Id: {{DeliveryIssuanceId}}
+                                <span style="text-align:center;color: red;font-weight:bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{DBoysData.DisplayName}} </span>
+                                <span style="float:right">  Date: {{DBoyData.CreatedDate|date:'medium'}}</span><br>
+                                <span style="float:right;">{{DBoysData.Mobile}}</span>
+                            </p>
+                            <p style="text-align:left;">
+                                Total Order &nbsp;<span style="color: black;font-weight:bold"> {{TotalDeliveredOrder +TotalCancelOrder+TotalRedispatchOrder}} /- </span>
+                            </p>
+                            <hr></hr>
+
+                            <p>&nbsp;Delivered Order</p>
+                            
+                            <tr>
+                                <td colspan="2">Delivered <span class="badge badge-danger ml-2">{{TotalDeliveredOrder}}</span></td>
+                                </tr><!--
+                                <td>Cash Amount <span class="badge badge-primary ml-2">{{TotalDeliveredCashAmount}}</span></td>
+                                <td>Online Amount<span class="badge badge-success ml-2">{{TotalDeliveredElectronicAmount}}</span></td>
+                                <td colspan="2">Cheque Amount <span class="badge badge-info ml-2">{{TotalDeliveredChequeAmount}}</span></td>
+                                <td>Comment</td>
+                                <td>Delivered Total Amount<span class="badge badge-danger ml-2">{{TotalDeliveredOrderAmount}}</span></td>
+                            </tr>-->
+                            <tr>
+                               
+                                <th >
+                                  
+                                    <div class="th">
+                                        OrderId
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        LScode
+                                    </div>
+                                </th>
+
+                                <!--<th>
+                                    <div class="th">
+                                        Cash Amount
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Online Amount
+                                    </div>
+                                </th>
+
+                                <th>
+                                    <div class="th">
+                                        Cheque Amount
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Cheque No
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Comment
+                                    </div>
+                                </th>-->
+                                <th>
+                                    <div class="th">
+                                         Total
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="trade in delivereddata">
+                            
+                                <td>{{trade.OrderId}}</td>
+                                <td>{{trade.LScode}}</td>
+                                <!--<td><span class="badge badge-primary ml-2">{{trade.cashAmount}}</span></td>
+                                <td><span class="badge badge-success ml-2">{{trade.ElectronicAmount}}</span></td>
+                                <td><span class="badge badge-info ml-2">{{trade.chequeAmount}}</span></td>
+                                <td>{{trade.chequeNo}}</td>
+                                <td>{{trade.comments}}</td>-->
+                                <td>{{trade.GrossAmount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr></hr>
+                    <table class="table table-bordered table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <p>Canceled</p>
+                                <td>Total canceld order<span class="badge badge-danger ml-2"> {{TotalCancelOrder}}</span></td>
+                                <!--<td>Total canceld Qty {{TotalCanceledOrderqty}}</td>
+                                <td>Total canceld Amount {{TotalCanceledOrderAmount}} </td>-->
+                            </tr>
+
+                            <tr>                               
+                                <th>
+                                    <div class="th">
+                                        Orders and QTYs
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Item Name
+                                    </div>
+                                </th>
+
+                                <th>
+                                    <div class="th">
+                                        Total quantity
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="trades in allproducts">                               
+                                <td>{{trades.OrderQty}}</td>
+                                <td>{{trades.itemname}}</td>
+                                <td>{{trades.qty}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <p>ReDispatch</p>
+                               <td>Total ReDispatch Order<span class="badge badge-danger ml-2"> {{TotalRedispatchOrder}}</span></td>
+                                 <!--<td>Total ReDispatch Qty {{TotalRedispatchOrderqty}}</td>
+                                <td>Total ReDispatch Amount {{TotalRedispatchedOrderAmount}}</td>-->
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    <div class="th">
+                                        Orders and QTYs
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Item Name
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Total quantity
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="r in allproductredispatched">  
+                                <td>{{r.OrderQty}}</td>
+                                <td>{{r.itemname}}</td>
+                                <td>{{r.qty}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered table-striped table-responsive" style="color: brown;font-weight: 800;">
+                        <thead>
+                            <tr>
+                                <p>Under Shippment</p>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <div class="th">
+                                        S.No
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Orders
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th">
+                                        Sk Code
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="r in shippedData">
+                                <td>{{1+$index}}</td>
+                                <td>{{r.OrderId}}</td>
+                                <td>{{r.LScode}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h6 class="noshowpage">*This is a computer-generated document. No signature is required.</h6>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<button style="float:left" ng-click="printToCart('printSectionId')" class="btn-sm btn-primary">Print</button>-->
+            <button type="button" class="btn btn-ar btn-warning" ng-click="cancel()" data-dismiss="modal">cancel</button>
+
+        </div>
+    </form>
+</script>
+
+<script type="text/ng-template" id="ProductsAssignmentModal.html">
+    <form name="myFormSiteModal">
+
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()" data-dismiss="modal">
+                <span class="icon icon-x" aria-hidden="true">
+                </span>
+                <span class="sr-only">Close</span>
+            </button>
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button" ng-click="ok()">×</button>
+            <h4 class="modal-title">Products Assignment View Details</h4>
+        </div>
+        <style>
+            .noshowpage {
+                display: none !important
+            }
+        </style>
+        <div class="modal-body">
+            <div class="colasdasdasd">
+                <p style="color: #FF0000" ng-show="gotErrors"> Unable To Create Site  ! Please Try Again</p>
+                <p style="color: #FF0000" ng-show="AlreadyExist"> Site Already Exist  ! Please Try Another Site</p>
+            </div>
+            <div class="">
+                <!--<div class="row">
+                    <div class="col-md-4">Issuance Orders:-</div>
+                    <div class="col-md-1" ng-repeat="dd in Orderids">{{dd}}</div>
+                </div>-->
+                <div class="row">
+                    <!--<div class="col-xs-12">
+                        <table class="table table-bordered table-striped table-responsive">
+                            <style>
+                                table, th, td {
+                                    border: 1px solid black;
+                                }
+                            </style>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="th">
+                                            Delivery Boy
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            TotalAssignmentAmount
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: red;">{{DBoyData.DisplayName}}</td>
+                                    <td style="color: red;" >{{DBoyData.TotalAssignmentAmount}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>-->
+                </div>
+                <div class="row">
+                    <div class="col-xs-6" id="printItemAssignment">
+                        <div class="col-sm-3 col-md-6 col-lg-4" style="background-color:#e3efeb;">
+                            <p style="text-align:left;font-size: 14px;" class="noshowpage">
+                                <strong>Delivery Assignment (Products List)</strong>
+                                <span style="float:right" ng-if="DBoyData.AssignmentBarcodeImage!=null">
+                                    <img src="data:image/png;base64,{{DBoyData.AssignmentBarcodeImage}}" style="width:60%;float: right;">
+                                </span><br /><br /><br />
+                                <span style="float:left">
+                                    <span style="float: right;color:black;font-weight:bold">Assignment Id:  {{DBoyData.DeliveryIssuanceId}} </span>
+                                </span>
+                                <br />
+                                <span>
+                                    <span style="float: left;">Date : {{DBoyData.CreatedDate| date :"medium"}}</span>
+                                </span><br />
+                            </p>
+                            <hr>
+                            <p style="text-align:left;font-size: 14px;" class="noshowpage">
+
+                                Delivery Boy: &nbsp;<span style="color: black;font-weight:bold"> {{DBoyData.DisplayName}}&nbsp; </span>
+                                <span style="float:right;">Total Price of Items: <strong> {{DBoyData.TotalAssignmentAmount| number : 2}}  /-</strong></span>
+                            </p>
+                            <hr>
+
+
+                        </div>
+                        <table class="table table-bordered table-striped table-responsive">
+                            <style>
+                                @media print {
+                                    table {
+                                        border: solid #000 !important;
+                                        border-width: 1px 0 0 1px !important;
+                                    }
+
+
+                                    th, td {
+                                        border: solid #000 !important;
+                                        border-width: 0 1px 1px 0 !important;
+                                    }
+
+                                    .no-print {
+                                        display: none !important;
+                                    }
+
+                                    .border {
+                                        border: 1px solid #000 !important;
+                                    }
+                                }
+                            </style>
+                            <thead>
+
+                                <tr>
+                                    <th>
+                                        <div class="th">
+                                            S.No
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            Product Name
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            QTY
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            Orders and QTYs
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="pd in orderdetails">
+                                    <td>{{ $index+1 }}</td>
+                                    <td>{{pd.itemname}}</td>
+                                    <td>{{pd.qty}}</td>
+                                    <td>{{pd.OrderQty}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!--<label for="site-name" step="0.01">Total Price of Items:  {{DBoyData.TotalAssignmentAmount| number : 2}}/-</label>  <br />-->
+                        <h6 class="noshowpage">*This is a computer-generated document. No signature is required.</h6>
+
+                        <button ng-click="printItemAssignment('printItemAssignment')" class="btn-sm btn-primary no-print"> <span class="glyphicon glyphicon-print"> </span>Print Product List</button>
+                    </div>
+
+                    <div class="col-xs-6" id="printDetailId">
+
+
+                        <table class="table table-bordered table-striped table-responsive">
+                            <style type="text/css">
+                                @media print {
+                                    table {
+                                        border: solid #000 !important;
+                                        border-width: 1px 0 0 1px !important;
+                                    }
+
+
+                                    th, td {
+                                        border: solid #000 !important;
+                                        border-width: 0 1px 1px 0 !important;
+                                    }
+
+                                    /*table, th, td {
+                                        border: 1px solid #000 !important;
+                                        border-width: 0 1px 0px 0 !important;
+
+                                    }*/
+
+                                    .no-print {
+                                        display: none !important;
+                                    }
+
+                                    .border {
+                                        border: 1px solid #000 !important;
+                                    }
+                                }
+                            </style>
+
+
+                            <h3 class="noshowpage text-center"><strong>Products Assignment Details</strong></h3>
+
+                            <h4 class="noshowpage">Date: {{DBoyData.CreatedDate|date:'medium'}}</h4>
+                            <hr class="noshowpage"></hr>
+                            <thead>
+
+                                <tr>
+                                    <th>
+                                        <div class="th">
+                                            Assignment Id
+                                        </div>
+                                    </th>
+
+                                    <th>
+                                        <div class="th">
+                                            Delivery Boy
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            Total Assignment Amount
+                                        </div>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: black;"><strong>{{DBoyData.DeliveryIssuanceId}}</strong></td>
+                                    <td style="color: red;">{{DBoyData.DisplayName}}</td>
+                                    <td style="color: black;"><strong>{{DBoyData.TotalAssignmentAmount}}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br />
+                        <table class="table table-bordered table-striped table-responsive">
+                            <!--<style>
+                                table, th, td {
+                                    border: 1px solid black;
+                                }
+                            </style>-->
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="th">
+                                            S.No
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            Order Id
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            ShopName
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="th">
+                                            Gross Amount
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="dds in Orderidss">
+                                    <td>{{ $index+1 }}</td>
+                                    <td>{{dds.orderid}}</td>
+                                    <td>{{dds.ShopName}}</td>
+                                    <td>{{dds.amount}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <h6 class="no-print" style="color:red">*You can not take Invoice print till assignment finalized.</h6>
+                            <button ng-disabled="DBoyData.Status=='SavedAsDraft'" id="btnPrintAll" class="btn-sm btn-primary printer no-print" style="float:right; margin-right: 15px;" onclick="javascript: printDivbtnPrintAll('divtoPrintbtnPrintAll')"> <span class="glyphicon glyphicon-print no-print"> </span> Print All Invoice</button>
+                        </div>
+                          <button style="float:left" ng-click="printdetail('printDetailId')" class="btn-sm btn-dark no-print">Print Current Page</button>
+                        <h6 class="noshowpage">*This is a computer-generated document. No signature is required.</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+           
+            <button type="button" class="btn btn-ar btn-warning" ng-click="cancel()" data-dismiss="modal">cancel</button>
+        </div>
+    </form>
+    <!--///Print All Order Item-->
+
+    <div id="divtoPrintbtnPrintAll" style="visibility: hidden; position: absolute;">
+        <style type="text/css">
+            @media print {
+                .no-print {
+                    display: none !important;
+                }
+
+                .border {
+                    border: 1px solid #000 !important;
+                }
+
+                th, td {
+                    border: solid #000 !important;
+                    border-width: 0 1px 1px 0 !important;
+                    border-spacing: 0;
+                    padding: 0;
+                    text-align: center;
+                }
+            }
+        </style>
+        <form>
+            <div ng-repeat="OrderData1 in AssOrder ">
+                <div class="containers invoice">
+                    <center>
+                        <h3>TAX INVOICE</h3>
+                    </center>
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="text-align:left;">
+                                    <div class="row col-md-12" style="display:flex;justify-content:space-around;align-items:center;margin-top:10px;">
+                                        <div style="width:30%;margin-left:15px;">
+                                            <img src="https://res.cloudinary.com/ERP/image/upload/v1563356363/home/Logo_2.png" height="20px" />
+                                        </div>
+                                        <div style="text-align:center;width:40%;">
+                                            <center>
+                                                <!--<strong style="font-size: 18px;">{{FromWarehouseDetail.CompanyName}}</strong>-->
+                                                <strong style="font-size: 18px;">ERP E Trading Pvt. Ltd.</strong>
+                                                <br />
+                                                <span style="font-size: 14px;">Gstin Number: </span><u style="font-size: 14px;">{{warehouse[0].GSTin}}</u><br />
+                                            </center>
+                                        </div>
+                                        <div style="width:30%;margin-right:15px;">
+                                            <span ng-if="OrderData1.InvoiceBarcodeImage!=null">
+
+                                                <!--<img src="{{OrderData1.BcodeUrl}}" style="width:60%;float: right;">-->
+                                                <img src="data:image/png;base64,{{OrderData1.InvoiceBarcodeImage}}" style="height:70px;float: right;">
+
+                                                <!--<figcaption style="float: right;">{{OrderData1.OrderId}}</figcaption>-->
+
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:center">
+                                        <span style="font-size: 14px;">Address :</span>
+                                        <span style="font-size: 14px;">{{warehouse[0].Address}}</span>
+                                        <span style="font-size: 14px;">{{warehouse[0].StateName}} ,India </span><br />
+                                        <span style="font-size: 14px;">Call : {{warehouse[0].Phone}}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-left:10px;vertical-align:top;width:37%;">
+                                    <strong style="font-size: 14px;">Customer Information</strong><br>
+                                    <span style="font-size: 14px;">LScode : <strong>{{OrderData1.LScode}}</strong></span><br />
+                                    <strong style="font-size: 12px;">Shop Name : {{OrderData1.ShopName}}</strong><br />
+
+                                    <span style="font-size: 14px;">Address :  {{OrderData1.BillingAddress}}</span><br />
+                                    <span style="font-size: 14px;">Gstin Number : {{OrderData1.Tin_No}}</span><br />
+                                    <span style="font-size: 14px;">Mobile : <u>{{OrderData1.Customerphonenum}}</u></span><br />
+                                    <span style="font-size: 14px;">Customer Name : {{OrderData1.CustomerName}}</span>
+                                </td>
+                                <td style="text-align:left;padding-left:10px;vertical-align:top;width:30%;">
+                                    <span style="font-size: 14px;">Executive :<strong> {{OrderData1.SalesPerson}}</strong> </span></br>
+                                    <span style="font-size: 14px;">Mob.No. :<strong> {{OrderData1.SalesMobile}}</strong></span><br />
+                                    <span style="font-size: 14px;">DeliveryBoy : <strong> {{OrderData1.DboyName}}</strong></span><br>
+                                    <span style="font-size: 14px;">
+                                        Assignment No. :<strong> {{OrderData1.DeliveryIssuanceIdOrderDeliveryMaster}}</strong>
+                                    </span>
+                                </td>
+                                <td style="text-align:left;padding-left:10px;vertical-align:top;width:33%;">
+
+                                    Bill Amount :Rs.<span style="color: black;font-weight:bold"> {{OrderData1.GrossAmount +OrderData1.WalletAmount+OrderData1.BillDiscountAmount| number:0}}&nbsp;<i class="fa fa-inr"></i>/- </span>
+                                    <div>Invoice No.:<strong> {{OrderData1.invoice_no}}</strong></div>
+                                    <div>Order Id: {{OrderData1.OrderId}}</div>
+                                    <span style="font-size: 14px;">Date : {{OrderData1.OrderedDate|date:'medium'}}</span><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="table-responsive">
+                                        <div class="table-responsive">
+                                            <table style="font-size:12px!important;" width="100%">
+                                                <thead style="border-bottom: none !important;">
+                                                    <tr>
+                                                        <td><strong>S.no.</strong></td>
+                                                        <td><strong>Item Name</strong></td>
+                                                        <td><strong>MRP</strong></td>
+                                                        <td><strong>Unit Price</strong></td>
+                                                        <td><strong>MOQ</strong></td>
+                                                        <td><strong>Peti/Out/Qty</strong></td>
+                                                        <td><strong>Total Qty(pcs)</strong></td>
+                                                        <td><strong>AWOTD</strong></td>
+                                                        <td class="border"><strong>HSNCode</strong></td>
+                                                        <td class="border"><strong>Tax %</strong></td>
+                                                        <td class="border"><strong>Tax</strong></td>
+                                                        <!-- New -->
+                                                        <td class="border" ng-if="(OrderData1.IsIgstInvoice== true)"><strong>IGST %</strong></td>
+                                                        <td class="border" ng-if="(OrderData1.IsIgstInvoice== true)"><strong>IGST</strong></td>
+
+
+                                                        <td class="border" ng-if="(OrderData1.IsIgstInvoice== false)"><strong>SGST %</strong></td>
+                                                        <td class="border" ng-if="(OrderData1.IsIgstInvoice== false)"><strong>SGST</strong></td>
+                                                        <td class="border" ng-if="(OrderData1.IsIgstInvoice== false)"><strong>CGST %</strong></td>
+                                                        <td class="border" ng-if="(OrderData1.IsIgstInvoice== false)"><strong>CGST</strong></td>
+                                                        <!--//cess-->
+
+                                                        <td class="border" ng-if="(HideCessColumn == true && OrderData1.IsIgstInvoice== false)"><strong>Cess%</strong></td>
+                                                        <td class="border" ng-if="(HideCessColumn == true && OrderData1.IsIgstInvoice== false)"><strong>Cess</strong></td>
+                                                        <td class="border">Total Amt</td>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="border">
+                                                    <tr data-ng-repeat="orderDetail in OrderData1.orderDetails| filter: RemoveZeroQtyItemInvoice('Noqty', 0)">
+
+                                                        <td ng-if="orderDetail.UnitPrice!=0">
+                                                            {{$index + 1}}
+                                                        </td>
+                                                        <td ng-if="orderDetail.UnitPrice==0">
+                                                            Free Item
+                                                        </td>
+                                                        <td>{{orderDetail.itemname}}</td>
+
+                                                        <td>{{orderDetail.price}}</td>
+                                                        <td>{{orderDetail.UnitPrice| number : 2}}</td>
+                                                        <td>{{orderDetail.MinOrderQty}}</td>
+                                                        <td>{{orderDetail.qty/orderDetail.MinOrderQty | number : 2}}</td>
+                                                        <td>{{orderDetail.Noqty}}</td>
+                                                        <td>{{orderDetail.AmtWithoutTaxDisc | number:2}}</td>
+                                                        <td>{{orderDetail.HSNCode}}</td>
+                                                        <td>{{orderDetail.TaxPercentage + orderDetail.TotalCessPercentage}}</td>
+                                                        <td>{{(orderDetail.TaxAmmount + orderDetail.CessTaxAmount) | number:2}}</td>
+
+
+                                                        <!--//new column in Igst-->
+                                                        <td ng-if="(OrderData1.IsIgstInvoice== true)">{{orderDetail.TaxPercentage + orderDetail.TotalCessPercentage}} </td>
+                                                        <td ng-if="(OrderData1.IsIgstInvoice== true)">{{(orderDetail.TaxAmmount + orderDetail.CessTaxAmount) | number:2}} </td>
+
+
+                                                        <td ng-if="(OrderData1.IsIgstInvoice== false)">{{orderDetail.SGSTTaxPercentage}}</td>
+                                                        <td ng-if="(OrderData1.IsIgstInvoice== false)">{{orderDetail.SGSTTaxAmmount| number:2}}</td>
+                                                        <td ng-if="(OrderData1.IsIgstInvoice== false)">{{orderDetail.CGSTTaxPercentage}}</td>
+                                                        <td ng-if="(OrderData1.IsIgstInvoice== false)">{{orderDetail.CGSTTaxAmmount| number:2}}</td>
+                                                        <!--//cess-->
+                                                        <td ng-if="(HideCessColumn == true  && OrderData1.IsIgstInvoice== false)">{{orderDetail.TotalCessPercentage}}</td>
+                                                        <td ng-if="(HideCessColumn == true  && OrderData1.IsIgstInvoice== false)">{{orderDetail.CessTaxAmount| number:2}}</td>
+                                                        <td>{{orderDetail.TotalAmt}}</td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-left:10px;vertical-align:top;width:37%;">
+                                    <span style="font-size: 14px;">Discount: {{OrderData1.DiscountAmount | number:2}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                    <span style="font-size: 14px;">Wallet Amount used: {{OrderData1.WalletAmount | number:0}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                    <span style="font-size: 14px;" ng-show="OrderData1.BillDiscountAmount>0">Bill Discount Amount: {{OrderData1.BillDiscountAmount | number:0}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                    <span style="font-size: 14px;" ng-show="OrderData1.BillDiscountAmount>0">Offer Type : {{OrderData1.offertype }}</span><br />
+
+                                </td>
+                                <td style="text-align:left;padding-left:10px;vertical-align:top;width:30%;">
+                                    <span>Total Amount Incl.Tax: {{OrderData1.TotalAmount + OrderData1.WalletAmount+OrderData1.BillDiscountAmount - OrderData1.deliveryCharge| number:2}}&nbsp;<i class="fa fa-inr">/-</i></span><br />
+                                    <span style="font-size: 14px;">Total Tax Amount : {{OrderData1.TaxAmount | number:2}}&nbsp;<i class="fa fa-inr">/-</i></span><br />
+                                    <span style="font-size: 14px;">Delivery Charge : {{OrderData1.deliveryCharge | number:0}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                    <span style="font-size: 14px;">Saving Amount: {{OrderData1.Savingamount}}&nbsp;<i class="fa fa-inr">/-</i></span><br /><br />
+                                    Net Amount :<strong style="font-size: 16px;">{{OrderData1.GrossAmount | number:0}}&nbsp;<i class="fa fa-inr"> /-</i></strong><br />
+                                    <strong style="font-size: 16px" ng-if="OrderData1.Status=='Partial receiving -Bounce'">Account Status :: {{OrderData1.Status}}</strong>
+
+                                </td>
+                                <td style="text-align:left;padding-left:10px;vertical-align:top;width:33%;">
+
+                                    <div ng-if="OrderData1.PaymentDetails.length>0">
+                                        <div class="panel panel-info">
+                                            <div class="panel-footer">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                Payment Mode
+                                                            </th>
+                                                            <th>
+                                                                Amount
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr data-ng-repeat="Pd in OrderData1.PaymentDetails">
+                                                            <td>{{Pd.PaymentFrom}} </td>
+                                                            <td>{{Pd.amount}}</td>
+                                                        <tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="OrderData1.PaymentDetails.length==0">
+                                        <span ng-if="OrderData1.CashAmount>0">Cash Amount : {{OrderData1.CashAmount | number:0}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                        <span ng-if="OrderData1.CheckAmount>0">Cheque Amount : {{OrderData1.CheckAmount | number:0}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                        <span ng-if="OrderData1.ElectronicAmount>0">Online Amount : {{OrderData1.ElectronicAmount | number:0}}&nbsp;<i class="fa fa-inr"></i></span><br />
+                                    </div>                                   
+                                    <!--Payment received: <strong style="font-size: 16px;">{{OrderData1.GrossAmount | number:0}}&nbsp;<i class="fa fa-inr">/-</i></strong>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:center">
+                                    <span style="font-size: 12px;">Others Comments</></span>
+                                    <div>
+                                        <span style="font-size: 12px; margin-right:5px;">1). Payment to be made by cash on delivery or Cheque(Same day only)</span>
+                                        <span style="font-size: 12px; margin-right:5px;">2). Cheques Payable to ERP E Trading Pvt. Ltd.</span>
+                                        <span style="font-size: 12px; margin-right:5px;">3). Only same day cheques are accepted.</span>
+                                        <span style="font-size: 12px; margin-right:5px;">4). Cheques retrun charges Rs.200 to Rs.400</span>
+                                        <span style="font-size: 12px; margin-right:5px;">5). Cheques are accepted above 5,000.00 only.</span>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="clss">
+                        <span>This is computer generated invoice no signature required.</span>
+                        <hr>
+                        <span>
+                            * The courts at Indore alone will have jurisdiction in respect of all disputes arising with regard to the goods sold under this invoice.
+                            <br>
+                        </span>
+                    </div>
+
+                    <style type="text/css">
+                        @media print {
+                            table {
+                                top: 10px !important;
+                            }
+
+                                table, table tr, table td {
+                                    border-top: #000 solid 1px !important;
+                                    border-bottom: #000 solid 1px !important;
+                                    border-left: #000 solid 1px !important;
+                                    border-right: #000 solid 1px !important;
+                                    border-spacing: 0;
+                                    padding: 0;
+                                    text-align: center;
+                                }
+                        }
+                    </style>
+                    <style>
+                        @media print {
+                            #btnPrint {
+                                display: none !important;
+                            }
+
+                            .printer {
+                                display: none !important;
+                            }
+
+                            .clss {
+                                position: fixed;
+                                font-size: 11px;
+                                text-align: left;
+                                bottom: 0px;
+                                width: 100%;
+                            }
+                        }
+                    </style>
+                    <footer style="page-break-before: always;"></footer>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<!-- AddShortItemsModal site modal -->
+<script type="text/ng-template" id="AddShortItemsModal.html">
+    <form name="myFormSiteModal">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()" data-dismiss="modal">
+                <span class="icon icon-x" aria-hidden="true">
+                </span>
+                <span class="sr-only">Close</span>
+            </button>
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button" ng-click="ok()">×</button>
+            <h4 class="modal-title">Products Assignment ShortItem Details</h4>
+        </div>
+        <div class="modal-body">
+            <div class="colasdasdasd">
+                <p style="color: #FF0000" ng-show="gotErrors"> Unable To Create Site  ! Please Try Again</p>
+                <p style="color: #FF0000" ng-show="AlreadyExist"> Site Already Exist  ! Please Try Another Site</p>
+            </div>
+
+
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><strong>Assignment Item</strong></h3>
+                            </div>
+                            <table class="table table-bordered table-striped table-responsive">
+                                <thead>
+
+                                    <tr>
+                                        <th>
+                                            <div class="th">
+                                                S.No
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="th">
+                                                Product Name
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="th">
+                                                OrderId and QTYs
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="th">
+                                                Total QTY
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="pd in orderdetails">
+                                        <td>{{ $index+1 }}</td>
+                                        <td>{{pd.itemname}}</td>
+                                        <td>{{pd.OrderQty}}</td>
+                                        <td>{{pd.qty}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-xs-7">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><strong>Create Short Item of Assignment => (AssignmentID: {{DBoyData.DeliveryIssuanceId}})</strong></h3>
+                                   
+                                </div>
+                                <div class="panel-footer">
+                                    <div ng-show="DBoyData.Status=='SavedAsDraft'">
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <p>Select Item</p>
+                                                <select class="form-control" id="site-name" name="Item Name" ng-model="sp" ng-change="GetOrderId(sp)">
+                                                    <option value="">---SELECT---</option>
+                                                    <option value="{{sp}}" ng-repeat="sp in orderdetails"> {{sp.itemname}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <p>Select Order</p>
+                                                <select class="form-control" id="site-name" name="Order Id" ng-model="Shortdata.OrderId" ng-change="getOrderItem(Shortdata.OrderId,sp)">
+                                                    <option value="" ng-selected="selected">--SELECT--</option>
+                                                    <option value="{{sp}}" ng-repeat="sp in OrderIds"> {{sp}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group col-md-4">
+                                                    <label for="qty">Damage Stock</label>
+                                                    <input class="form-control" type="number" ng-model="Shortdata.DamageStockQty" />
+                                                </div>
+                                                <div class="form-group col-md-8">
+                                                    <label for="qty">Comment</label>
+                                                    <select  class="form-control" ng-model="Shortdata.DamageComment">
+                                                        <option value="">Select Comment</option>
+                                                        <option value="Item Expired">Item Expired</option>
+                                                        <option value="Item Damaged">Item Damaged</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group col-md-12">
+                                                    <label for="qty">Order Qty</label>
+                                                    <input class="form-control" type="number" ng-readonly="true" ng-model="OrderAsData.qty" />
+                                                </div>                                               
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group col-md-4">
+                                                    <label for="qty">Not in Stock</label>
+                                                    <input class="form-control" type="number" ng-model="Shortdata.NotinStockQty" />
+                                                </div>
+                                                <div class="form-group col-md-8">
+                                                    <label for="qty">Comment</label>
+                                                    <select class="form-control" ng-model="Shortdata.NotInStockComment">
+                                                        <option value="">Select Comment</option>
+                                                        <option value="Item Not Found">Item Not Found</option>
+                                                        <option value="Item Qty Short">Item Qty Short</option>
+                                                    </select>
+                                                   
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group col-md-12">                                                    
+                                                    <button type="button" class="btn btn-ar btn-primary" ng-click="InsertTempShortItem(sp,Shortdata.DamageStockQty, Shortdata.NotinStockQty, Shortdata.OrderId, Shortdata.DamageComment, Shortdata.NotInStockComment,OrderAsData.qty)"> Add </button>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                   
+
+                                    <table class="table table-bordered table-striped table-responsive">
+                                        <thead>
+
+                                            <tr>
+                                                <th>
+                                                    <div class="th">
+                                                        S.No
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        Order Id
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        Product Name
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        OrderQty
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                       TotalShort
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        DamageStock
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        NotInStock
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        Damage
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        NotInStock
+                                                    </div>
+                                                </th>
+                                               
+                                                <th>
+                                                    <div class="th">
+                                                        CreatedDate
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="th">
+                                                        CreatedBy
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-ng-repeat="apd in AssignmentShortItem">
+                                                <td>{{ $index+1 }}</td>
+                                                <td>{{apd.OrderId}}</td>
+                                                <td>{{apd.itemname}}</td>
+                                                <td>{{apd.Orderqty}}</td>
+                                                <td>{{apd.DamageStockQty + apd.NotinStockQty}}</td>
+                                                <td>
+                                                    <span>
+                                                        {{apd.DamageStockQty}}
+                                                    </span>                                                   
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        {{apd.NotinStockQty}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <p href="#" data-toggle="tooltip" data-placement="top" title="{{apd.DamageComment}}">
+                                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                                    </p>    
+
+                                                </td>
+                                                <td>
+                                                    <p href="#" data-toggle="tooltip" data-placement="top" title=" {{apd.NotInStockComment}}">
+                                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                                    </p>   
+                                               </td>
+                                                <td>{{apd.CreatedDate|date:'medium'}}</td>
+                                                <td>{{apd.CreatedBy}}</td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <button type="button" id="SavedShortItem" ng-show="DBoyData.Status=='SavedAsDraft'" ng-disabled="AssignmentShortItem.length==0" class="btn btn-ar btn-info" ng-click="SavedShortItem()" data-dismiss="modal">Save</button>
+
+                     </div>
+                </div>
+         
+        </div>
+        <div class="modal-footer">
+            <button type="button" style="float: right;" ng-show="DBoyData.Status=='SavedAsDraft'" id="FinalizationAssignment" class="btn btn-ar btn-info" style="float: right;" ng-click="Finalization()" data-dismiss="modal">Finalization</button>
+
+            <button type="button"     style="float: left;" class="btn btn-ar btn-warning"  ng-click="cancel()" data-dismiss="modal">cancel</button>
+        </div>
+    </form>
+</script>
+
+<script>
+    /// print function
+    function printDi1(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+        
+    }
+</script>
+<script>
+    function printDivbtnPrintAll(divID) {
+        //Get the HTML of div
+        
+        var divElements = document.getElementById(divID).innerHTML;
+        printDivThroughTrick("divtoPrintbtnPrintAll");
+        onRouteChangeOff();
+        window.location.reload();
+    }
+    function printDivThroughTrick(divName) {
+
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+            var popupWin = window.open('', '_blank', 'width=900,height=600,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+            popupWin.window.focus();
+            popupWin.document.write('<!DOCTYPE html><html><head>' +
+                '<link rel="stylesheet" type="text/css" href="style.css" />' +
+                '</head><body onload="window.print()"><div class="reward-body">' + printContents + '</div></html>');
+            popupWin.onbeforeunload = function (event) {
+                popupWin.close();
+                return '.\n';
+            };
+            popupWin.onabort = function (event) {
+                popupWin.document.close();
+                popupWin.close();
+            }
+        } else {
+            var popupWin = window.open('', '_blank', 'width=900,height=600');
+            popupWin.document.open();
+            popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
+            popupWin.document.close();
+        }
+        popupWin.document.close();
+
+        return true;
+    }
+
+    function printElement(elem) {
+        var domClone = elem.cloneNode(true);
+
+        $printSection = document.getElementById("printSection");
+
+        if (!$printSection) {
+            var $printSection = document.createElement("div");
+            $printSection.id = "printSection";
+            document.body.appendChild($printSection);
+        }
+
+        $printSection.innerHTML = "";
+        $printSection.appendChild(domClone);
+
+    }
+</script>
+

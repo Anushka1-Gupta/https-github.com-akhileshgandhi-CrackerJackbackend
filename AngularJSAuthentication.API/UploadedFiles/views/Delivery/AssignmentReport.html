@@ -1,0 +1,117 @@
+﻿<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 17px;
+        font-family: fantasy;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 12px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+<div class="page page-table">
+
+    <section class="panel panel-default table-dynamic">
+        <div class="panel-heading">
+            <strong>
+                <span class="glyphicon glyphicon-th"> </span> Assignment Reports
+            </strong>
+        </div>
+        <br />
+        <div class="form-group col-md-12 ">
+            <div class="form-group col-md-2 ">
+                <label for="site-name">Select WareHouse</label><br />
+                <select class="form-control" id="site-name" ng-model="Warehouseid" data-ng-change="AgetOPReport(Warehouseid)">
+                    <option value="{{warehouses.WarehouseId}}" ng-repeat="warehouses in warehouse" data-ng-selected="Warehouseid == warehouses.Warehouseid"> {{warehouses.WarehouseName}} {{warehouses.CityName}}</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="site-name">Select Date Range</label><br />
+                <div class="form-group">
+                    <div class='input-group date'>
+                        <input name="daterange" id="dat" type='text' title="Select Date" class="form-control date-picker" />
+                        <span class="input-group-addon ">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="site-name"></label><br />
+                <button type="button" class="btn btn-ar btn-primary" id="Search" name="Sall" ng-click="searchdata(Warehouseid)">Search</button>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table>
+                        <tr>
+                            <th class="col-md-5"></th>
+                            <th>Number of orders</th>
+                            <th>value</th>
+                        </tr>
+                        <tr>
+                            <td>SavedAsDraft</td>
+                            <td>{{searchdta.SavedAsDraft}}</td>
+                            <td>{{searchdta.SavedAsDraftAmount|number:2}}</td>
+                        </tr>
+                        <tr>
+                            <td>Assigned </td>
+                            <td>{{searchdta.Assigned}}</td>
+                            <td>{{searchdta.AssignedAmount|number:2}}</td>
+
+                        </tr>
+                        <tr>
+                            <td>Accepted </td>
+                            <td>{{searchdta.Accepted}}</td>
+                            <td>{{searchdta.AcceptedAmount|number:2}}</td>
+                        </tr>
+                        <tr>
+                            <td>Rejected</td>
+                            <td>{{searchdta.Rejected}}</td>
+                            <td>{{searchdta.RejectedAmount|number:2}}</td>
+
+                        </tr>
+                        <tr>
+                            <td>Pending</td>
+                            <td>{{searchdta.Pending}}</td>
+                            <td>{{searchdta.PendingAmount|number:2}}</td>
+                        </tr>
+                        <tr>
+                            <td>Submitted</td>
+                            <td>{{searchdta.Submitted}}</td>
+                            <td>{{searchdta.SubmittedAmount|number:2}}</td>
+                        </tr>
+                        <tr>
+                            <td>Payment</td>
+                            <td>{{searchdta.Payment}}</td>
+                            <td>{{searchdta.PaymentAmount|number:2}}</td>
+
+                        </tr>
+                        <tr>
+                            <td>Freezed</td>
+                            <td>{{searchdta.Freezed}}</td>
+                            <td>{{searchdta.FreezedAmount|number:2}}</td>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br />
+            <br />
+        </div>
+    </section>
+</div>
